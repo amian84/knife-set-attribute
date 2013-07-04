@@ -14,6 +14,13 @@ Supply nested attributes and the values can be strings or array.
 % knife set_attribute node_name attribute.sub_attribute "[\"{\'key1\'=>\'value1\'}\", \"{\'key2\'=>\'value2\'}\"]" 
 
 ```
+Use custom separator for keys containing dots.
+
+```
+
+% knife set_attribute node_name attribute/sub_attribute/v1.0 'value' --separator /
+
+```
 
 ## Installation
 
