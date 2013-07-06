@@ -17,9 +17,13 @@ Supply nested attributes and the values can be strings or array.
 Use custom separator for keys containing dots.
 
 ```
-
 % knife set_attribute node_name attribute/sub_attribute/v1.0 'value' --separator /
+```
 
+Use regular expression to match a list of nodes.
+
+```
+% knife set_attribute nodePrefix.* attrubute.sub_attribute value
 ```
 
 ## Installation
