@@ -32,7 +32,7 @@ class SetAttribute < Chef::Knife
         slices = attribute_arg.split(config[:separator])
         last = slices.pop
         parts = slices
-        hash = parts.inject(node) { |h,attr| !h.has_key?(attr) ? (h[attr]={}; h[attr]) : h[attr]}
+        hash = parts.inject(node.normal) { |h,attr| !h.has_key?(attr) ? (h[attr]={}; h[attr]) : h[attr]}
         if new_value.start_with?('[') and new_value.end_with?(']')
           prev = eval(new_value)
           new_arr = []
