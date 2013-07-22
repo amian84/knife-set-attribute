@@ -13,6 +13,12 @@ class SetAttribute < Chef::Knife
     :description => "Attribute dimension separator, defaults to '.'",
     :default => "."
 
+  option :dry_run,
+    :long => "--dry-run",
+    :short => "-n",
+    :description => "Don't actually set attribute. Instead, just show current value, and what would be set.",
+    :default => false
+
   def run
     unless name_args.length >= 3
       show_usage
@@ -29,6 +35,7 @@ class SetAttribute < Chef::Knife
       puts "Updating nodes: #{@nodelist.join(',')}"
       @nodelist.each do |n|
         node = Chef::Node.load(n)
+        node_initial_state = node.to_hash.to_s
         slices = attribute_arg.split(config[:separator])
         last = slices.pop
         parts = slices
@@ -39,12 +46,22 @@ class SetAttribute < Chef::Knife
           prev.each do |x|
             new_arr << eval(x)
           end
+          
+          puts "#{node} #{hash[last]} -> #{new_arr}"
           hash[last] = new_arr
         else
+          puts "#{node} #{hash[last]} -> #{new_value}"
           hash[last] = new_value
         end
-        node.save
-        puts "#{n} has been updated"
+
+        unless config[:dry_run]
+          if node_initial_state == node.to_hash.to_s
+            puts "#{n} has no changes"
+          else
+            node.save
+            puts "#{n} has been updated"
+          end
+        end
       end
     else
       puts "Found no matching nodes"
